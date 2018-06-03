@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1528062921 source:c:\users\logan\desktop\cis2520\assignment1\src\main.c
+	<stdio.h>
+	<stdlib.h>
+	"../include/main.h"
+	"../include/Queue.h"
+
+1528066140 source:c:\users\logan\desktop\cis2520\assignment1\src\queue.c
+	<stdio.h>
+	<stdlib.h>
+	"../include/Queue.h"
+
+1528062900 c:\users\logan\desktop\cis2520\assignment1\include\queue.h
+	<stdio.h>
+	<stdlib.h>
+
+1528057370 c:\users\logan\desktop\cis2520\assignment1\include\main.h
+
