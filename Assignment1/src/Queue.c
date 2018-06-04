@@ -104,6 +104,8 @@ int deleteDataFromList(List *list, void *toBeDeleted)
     {
       list->deleteData(nodeToBeCompared->data);
       free(nodeToBeCompared);
+      list->head=NULL;
+      list->tail=NULL;
       return EXIT_SUCCESS;
     }
     while(nodeToBeCompared->next != NULL)
@@ -313,10 +315,24 @@ float calculateTime(List *list)
   Data *firstDataS = NULL;
   Data *firstDataW = NULL;
 
+
+
   int west = 0;
   int east = 0;
   int north = 0;
   int south = 0;
+  int amountNorth = 0;
+  int amountEast = 0;
+  int amountWest = 0;
+  int amountSouth = 0;
+  float averageNorth = 0.0;
+  float averageEast = 0.0;
+  float averageSouth = 0.0;
+  float averageWest = 0.0;
+  float maxWaitTime = 0.0;
+
+  //char lastCarThroughIntersectionDirection = 'X';  //stores the last car through
+  //float lastCarThoughIntersectionTime = 0.0;
 
   int northVSEast = -999;
   int southVsWest = -999;
@@ -357,7 +373,6 @@ float calculateTime(List *list)
 //checking what car goes first
   while(north!=0 || south!=0 || west!=0 || east!=0)
   {
-    printf("%f\n",timeCounter);
     //comparing north against east
     if(east == 0)
     {
@@ -417,11 +432,18 @@ float calculateTime(List *list)
             {
               timeCounter = firstDataW->timeOfArrival;
             }
+
+
             printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
                    ,firstDataW->travelDirection
                    ,firstDataW->turnDirection
                    ,firstDataW->timeOfArrival
                    ,timeCounter);
+            if(maxWaitTime<(timeCounter-firstDataW->timeOfArrival)){
+              maxWaitTime = timeCounter-firstDataW->timeOfArrival;
+            }
+            averageWest = averageWest + (timeCounter - firstDataW->timeOfArrival);
+            amountWest++;
             timeCounter = timeCounter+turnTime(firstDataW);
             printf("%6.2f\n",timeCounter);
 
@@ -443,6 +465,8 @@ float calculateTime(List *list)
                    ,firstDataS->turnDirection
                    ,firstDataS->timeOfArrival
                    ,timeCounter);
+            averageSouth = averageSouth + (timeCounter - firstDataS->timeOfArrival);
+            amountSouth++;
             timeCounter = timeCounter+turnTime(firstDataS);
             printf("%6.2f\n",timeCounter);
 
@@ -465,7 +489,16 @@ float calculateTime(List *list)
           {
             timeCounter = firstDataE->timeOfArrival;
           }
-          timeCounter=timeCounter+turnTime(firstDataE);
+          printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                 ,firstDataE->travelDirection
+                 ,firstDataE->turnDirection
+                 ,firstDataE->timeOfArrival
+                 ,timeCounter);
+          averageEast = averageEast + (timeCounter - firstDataE->timeOfArrival);
+          amountEast++;
+          timeCounter = timeCounter+turnTime(firstDataE);
+          printf("%6.2f\n",timeCounter);
+
           firstDataE = findNewFirst(list,firstDataE,'E');
           if (firstDataE == NULL)
           {
@@ -478,7 +511,13 @@ float calculateTime(List *list)
           {
             timeCounter=firstDataN->timeOfArrival;
           }
-          timeCounter=timeCounter+turnTime(firstDataN);
+          printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                 ,firstDataN->travelDirection
+                 ,firstDataN->turnDirection
+                 ,firstDataN->timeOfArrival
+                 ,timeCounter);
+          timeCounter = timeCounter+turnTime(firstDataN);
+          printf("%6.2f\n",timeCounter);
           firstDataN = findNewFirst(list,firstDataN,'N');
           if (firstDataN == NULL)
           {
@@ -527,9 +566,13 @@ float calculateTime(List *list)
                    ,firstDataW->turnDirection
                    ,firstDataW->timeOfArrival
                    ,timeCounter);
+            if(maxWaitTime<(timeCounter-firstDataW->timeOfArrival)){
+              maxWaitTime = timeCounter-firstDataW->timeOfArrival;
+            }
+            averageWest = averageWest + (timeCounter - firstDataW->timeOfArrival);
+            amountWest++;
             timeCounter = timeCounter+turnTime(firstDataW);
             printf("%6.2f\n",timeCounter);
-
             firstDataW = findNewFirst(list,firstDataW,'W');
             if (firstDataW == NULL)
             {
@@ -546,6 +589,11 @@ float calculateTime(List *list)
                    ,firstDataS->turnDirection
                    ,firstDataS->timeOfArrival
                    ,timeCounter);
+            if(maxWaitTime<(timeCounter-firstDataS->timeOfArrival)){
+              maxWaitTime = timeCounter-firstDataS->timeOfArrival;
+            }
+            averageSouth = averageSouth + (timeCounter - firstDataS->timeOfArrival);
+            amountSouth++;
             timeCounter = timeCounter+turnTime(firstDataS);
             printf("%6.2f\n",timeCounter);
 
@@ -565,6 +613,11 @@ float calculateTime(List *list)
                    ,firstDataS->turnDirection
                    ,firstDataS->timeOfArrival
                    ,timeCounter);
+            if(maxWaitTime<(timeCounter-firstDataS->timeOfArrival)){
+              maxWaitTime = timeCounter-firstDataS->timeOfArrival;
+            }
+            averageSouth = averageSouth + (timeCounter - firstDataS->timeOfArrival);
+            amountSouth++;
             timeCounter = timeCounter+turnTime(firstDataS);
             printf("%6.2f\n",timeCounter);
             firstDataS = findNewFirst(list,firstDataS,'S');
@@ -584,7 +637,18 @@ float calculateTime(List *list)
             {
               timeCounter = firstDataE->timeOfArrival;
             }
+            printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                   ,firstDataE->travelDirection
+                   ,firstDataE->turnDirection
+                   ,firstDataE->timeOfArrival
+                   ,timeCounter);
+            if(maxWaitTime<(timeCounter-firstDataE->timeOfArrival)){
+              maxWaitTime = timeCounter-firstDataE->timeOfArrival;
+            }
+            averageEast = averageEast + (timeCounter - firstDataE->timeOfArrival);
+            amountEast++;
             timeCounter = timeCounter+turnTime(firstDataE);
+            printf("%6.2f\n",timeCounter);
             firstDataE = findNewFirst(list,firstDataE,'E');
             if (firstDataE == NULL)
             {
@@ -596,7 +660,18 @@ float calculateTime(List *list)
             {
               timeCounter = firstDataN->timeOfArrival;
             }
+            printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                   ,firstDataN->travelDirection
+                   ,firstDataN->turnDirection
+                   ,firstDataN->timeOfArrival
+                   ,timeCounter);
+            if(maxWaitTime<(timeCounter-firstDataN->timeOfArrival)){
+              maxWaitTime = timeCounter-firstDataN->timeOfArrival;
+            }
+            averageNorth = averageNorth + (timeCounter - firstDataN->timeOfArrival);
+            amountNorth++;
             timeCounter = timeCounter+turnTime(firstDataN);
+            printf("%6.2f\n",timeCounter);
             firstDataN = findNewFirst(list,firstDataN,'N');
             if (firstDataN == NULL)
             {
@@ -613,6 +688,11 @@ float calculateTime(List *list)
                    ,firstDataN->turnDirection
                    ,firstDataN->timeOfArrival
                    ,timeCounter);
+            if(maxWaitTime<(timeCounter-firstDataN->timeOfArrival)){
+              maxWaitTime = timeCounter-firstDataN->timeOfArrival;
+            }
+            averageNorth = averageNorth + (timeCounter - firstDataN->timeOfArrival);
+            amountNorth++;
             timeCounter = timeCounter+turnTime(firstDataN);
             printf("%6.2f\n",timeCounter);
 
@@ -640,7 +720,18 @@ float calculateTime(List *list)
                   {
                     timeCounter = firstDataE->timeOfArrival;
                   }
-                  timeCounter=timeCounter+turnTime(firstDataE);
+                  printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                         ,firstDataE->travelDirection
+                         ,firstDataE->turnDirection
+                         ,firstDataE->timeOfArrival
+                         ,timeCounter);
+                  if(maxWaitTime<(timeCounter-firstDataE->timeOfArrival)){
+                    maxWaitTime = timeCounter-firstDataE->timeOfArrival;
+                  }
+                  averageEast = averageEast + (timeCounter - firstDataE->timeOfArrival);
+                  amountEast++;
+                  timeCounter = timeCounter+turnTime(firstDataE);
+                  printf("%6.2f\n",timeCounter);
                   firstDataE = findNewFirst(list,firstDataE,'E');
                   if (firstDataE == NULL)
                   {
@@ -658,6 +749,11 @@ float calculateTime(List *list)
                          ,firstDataW->turnDirection
                          ,firstDataW->timeOfArrival
                          ,timeCounter);
+                  if(maxWaitTime<(timeCounter-firstDataW->timeOfArrival)){
+                    maxWaitTime = timeCounter-firstDataW->timeOfArrival;
+                  }
+                  averageWest = averageWest + (timeCounter - firstDataW->timeOfArrival);
+                  amountWest++;
                   timeCounter = timeCounter+turnTime(firstDataW);
                   printf("%6.2f\n",timeCounter);
 
@@ -674,7 +770,18 @@ float calculateTime(List *list)
                 {
                   timeCounter=firstDataE->timeOfArrival;
                 }
-                timeCounter=timeCounter+turnTime(firstDataE);
+                printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                       ,firstDataE->travelDirection
+                       ,firstDataE->turnDirection
+                       ,firstDataE->timeOfArrival
+                       ,timeCounter);
+                if(maxWaitTime<(timeCounter-firstDataE->timeOfArrival)){
+                  maxWaitTime = timeCounter-firstDataE->timeOfArrival;
+                }
+                averageEast = averageEast + (timeCounter - firstDataE->timeOfArrival);
+                amountEast++;
+                timeCounter = timeCounter+turnTime(firstDataE);
+                printf("%6.2f\n",timeCounter);
                 firstDataE = findNewFirst(list,firstDataE,'E');
                 if (firstDataE == NULL)
                 {
@@ -695,6 +802,11 @@ float calculateTime(List *list)
                        ,firstDataW->turnDirection
                        ,firstDataW->timeOfArrival
                        ,timeCounter);
+                if(maxWaitTime<(timeCounter-firstDataW->timeOfArrival)){
+                  maxWaitTime = timeCounter-firstDataW->timeOfArrival;
+                }
+                averageWest = averageWest + (timeCounter - firstDataW->timeOfArrival);
+                amountWest++;
                 timeCounter = timeCounter+turnTime(firstDataW);
                 printf("%6.2f\n",timeCounter);
 
@@ -713,7 +825,18 @@ float calculateTime(List *list)
                   {
                     timeCounter=firstDataN->timeOfArrival;
                   }
-                  timeCounter=timeCounter+turnTime(firstDataN);
+                  printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                         ,firstDataN->travelDirection
+                         ,firstDataN->turnDirection
+                         ,firstDataN->timeOfArrival
+                         ,timeCounter);
+                  if(maxWaitTime<(timeCounter-firstDataN->timeOfArrival)){
+                    maxWaitTime = timeCounter-firstDataN->timeOfArrival;
+                  }
+                  averageNorth = averageNorth + (timeCounter - firstDataN->timeOfArrival);
+                  amountNorth++;
+                  timeCounter = timeCounter+turnTime(firstDataN);
+                  printf("%6.2f\n",timeCounter);
                   firstDataN = findNewFirst(list,firstDataN,'N');
                   if (firstDataN == NULL)
                   {
@@ -731,6 +854,11 @@ float calculateTime(List *list)
                          ,firstDataS->turnDirection
                          ,firstDataS->timeOfArrival
                          ,timeCounter);
+                  if(maxWaitTime<(timeCounter-firstDataS->timeOfArrival)){
+                    maxWaitTime = timeCounter-firstDataS->timeOfArrival;
+                  }
+                  averageSouth = averageSouth + (timeCounter - firstDataS->timeOfArrival);
+                  amountSouth++;
                   timeCounter = timeCounter+turnTime(firstDataS);
                   printf("%6.2f\n",timeCounter);
                   firstDataS = findNewFirst(list,firstDataS,'S');
@@ -750,6 +878,11 @@ float calculateTime(List *list)
                        ,firstDataS->turnDirection
                        ,firstDataS->timeOfArrival
                        ,timeCounter);
+                if(maxWaitTime<(timeCounter-firstDataS->timeOfArrival)){
+                  maxWaitTime = timeCounter-firstDataS->timeOfArrival;
+                }
+                averageSouth = averageSouth + (timeCounter - firstDataS->timeOfArrival);
+                amountSouth++;
                 timeCounter = timeCounter+turnTime(firstDataS);
                 printf("%6.2f\n",timeCounter);
                 firstDataS = findNewFirst(list,firstDataS,'S');
@@ -772,9 +905,13 @@ float calculateTime(List *list)
                        ,firstDataW->turnDirection
                        ,firstDataW->timeOfArrival
                        ,timeCounter);
+                if(maxWaitTime<(timeCounter-firstDataW->timeOfArrival)){
+                  maxWaitTime = timeCounter-firstDataW->timeOfArrival;
+                }
+                averageWest = averageWest + (timeCounter - firstDataW->timeOfArrival);
+                amountWest++;
                 timeCounter = timeCounter+turnTime(firstDataW);
                 printf("%6.2f\n",timeCounter);
-
                 firstDataW = findNewFirst(list,firstDataW,'W');
                 if (firstDataW == NULL)
                 {
@@ -786,7 +923,19 @@ float calculateTime(List *list)
                 {
                   timeCounter=firstDataN->timeOfArrival;
                 }
-                timeCounter=timeCounter+turnTime(firstDataN);
+                printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                       ,firstDataN->travelDirection
+                       ,firstDataN->turnDirection
+                       ,firstDataN->timeOfArrival
+                       ,timeCounter);
+                if(maxWaitTime<(timeCounter-firstDataN->timeOfArrival)){
+                  maxWaitTime = timeCounter-firstDataN->timeOfArrival;
+                }
+                averageNorth = averageNorth + (timeCounter - firstDataN->timeOfArrival);
+                amountNorth++;
+                timeCounter = timeCounter+turnTime(firstDataN);
+                printf("%6.2f\n",timeCounter);
+
                 firstDataN = findNewFirst(list,firstDataN,'N');
                 if (firstDataN == NULL)
                 {
@@ -798,7 +947,18 @@ float calculateTime(List *list)
                 {
                   timeCounter=firstDataN->timeOfArrival;
                 }
-                timeCounter=timeCounter+turnTime(firstDataN);
+                printf("Car going %c, turning %c, arrival time of %6.2f is entering intersection at %6.2f and will leave at "
+                       ,firstDataN->travelDirection
+                       ,firstDataN->turnDirection
+                       ,firstDataN->timeOfArrival
+                       ,timeCounter);
+                if(maxWaitTime<(timeCounter-firstDataN->timeOfArrival)){
+                  maxWaitTime = timeCounter-firstDataN->timeOfArrival;
+                }
+                averageNorth = averageNorth + (timeCounter - firstDataN->timeOfArrival);
+                amountNorth++;
+                timeCounter = timeCounter+turnTime(firstDataN);
+                printf("%6.2f\n",timeCounter);
                 firstDataN = findNewFirst(list,firstDataN,'N');
                 if (firstDataN == NULL)
                 {
@@ -809,6 +969,26 @@ float calculateTime(List *list)
         }
     }
   }
+  if (amountNorth !=0)
+  {
+    printf("average wait time for north:%6.2f\n",(averageNorth/amountNorth));
+  }
+  if (amountEast!=0)
+  {
+    printf("average wait time for east:%6.2f\n",(averageEast/amountEast));
+  }
+  if (amountSouth!=0)
+  {
+    printf("average wait time for south:%6.2f\n",(averageSouth/amountSouth));
+  }
+  if (amountWest!=0)
+  {
+     printf("average wait time for west:%6.2f\n",(averageWest/amountWest));
+  }
+  if (amountNorth !=0 && amountSouth!=0 && amountEast!=0 && amountWest!=0){
+    printf("average wait time:%6.2f\n",((averageEast+averageNorth+averageSouth+averageWest)/(amountEast+amountNorth+amountSouth+amountWest)));
+  }
+  printf("Max wait time:%6.2f\n",maxWaitTime);
   return timeCounter;
 }
 

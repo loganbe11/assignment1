@@ -3,7 +3,7 @@
 #include "../include/main.h"
 #include "../include/Queue.h"
 
-int main()
+int main(int argc, char *argv[])
 {
   char travelDirection;  //travel direction, expecting one of 'N','S','E','W'
   char turnDirection;    //turn djrection, expecting one of 'F','R','L'
@@ -13,7 +13,7 @@ int main()
   List *list = initializeList(printChar,&free,compareDataFunction,compareTimeFunction);  //a List used to store the input car data
 
   //open the input data file
-  fp = fopen("TestData1.txt", "r");
+  fp = fopen(argv[1], "r");
 
   printf("Data File Information \n");
   //read in the input data file and store the car data into a list (sorted by arrival time)
@@ -26,11 +26,11 @@ int main()
     insertSorted(list, newData);
     printf("%c %c %f \n",travelDirection,turnDirection,timeOfArrival);
   }
-
   fclose(fp); //close the data file
 
   printf("\nSorted List \n");
   printForward(list);
+  printf("\n");
 
   calculateTime(list);
   return 0;

@@ -1,0 +1,14 @@
+N F 1
+S F    2   
+E    F 2
+W  F 21
+  W F   3.2
+N F 32
+N   L 9
+N R     11
+W   L 0.5
+
+
+ 
+W F 15
+

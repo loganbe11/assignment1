@@ -110,10 +110,24 @@ void printForward(List *list);
  **/
 void printBackwards(List *list);
 
+/**Function to calculate varying times of cars entering intersection, This will go through the list and stdout all the times of cars.
+this has a big O notation of 2N as the elements of the list must be gone through completely twice.
+*@pre List must exist, but does not have to have elements.
+*@param list pointer to linked list dummy head
+**/
 float calculateTime(List *list);
 
+/**function to calculate the time required to turn in the intersection.
+*@pre firstData must exist and have a direction
+*@param data for car turning
+**/
 float turnTime(Data *firstData);
 
+/**function to find the next car for the respective direction.
+this has a big O notation of n.
+*@pre list must exist
+*@param list pointer to linked list dummy head, direction, data of previous first
+**/
 Data* findNewFirst(List *list,Data *firstData, char direction);
 
 
